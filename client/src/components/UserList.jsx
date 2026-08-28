@@ -8,21 +8,21 @@ const UserList = ({ me, users, activeUser, unread, onlineCount, onSelect, onLogo
   );
 
   return (
-    <div className="sidebar">
-      <div className="sidebar-header">
-        <div className="user-profile">
-          <div className="avatar me-avatar">
+    <div className="side">
+      <div className="side-head">
+        <div className="me">
+          <div className="avatar">
             {me?.name ? me.name.charAt(0).toUpperCase() : "U"}
           </div>
           <div>
-            <div className="user-name">{me?.name}</div>
-            <div className="user-status">Online</div>
+            <div className="name">{me?.name}</div>
+            <div className="small muted">Online</div>
           </div>
         </div>
-        <button onClick={onLogout} className="logout-btn">Logout</button>
+        <button onClick={onLogout} className="link-btn">Logout</button>
       </div>
 
-      <div className="search-container">
+      <div className="search">
         <input
           type="text"
           placeholder="Search users..."
@@ -31,7 +31,7 @@ const UserList = ({ me, users, activeUser, unread, onlineCount, onSelect, onLogo
         />
       </div>
 
-      <div className="users-scroll">
+      <div className="list">
         {filteredUsers.map((u) => {
           const isSelected = activeUser?._id === u._id;
           const count = unread?.[u._id] || 0;
@@ -39,16 +39,16 @@ const UserList = ({ me, users, activeUser, unread, onlineCount, onSelect, onLogo
           return (
             <div
               key={u._id}
-              className={`user-item ${isSelected ? "active" : ""}`}
+              className={`row ${isSelected ? "active" : ""}`}
               onClick={() => onSelect(u)}
             >
               <div className="avatar">
                 {u.name.charAt(0).toUpperCase()}
               </div>
-              <div className="user-details">
-                <div className="user-item-name">{u.name}</div>
+              <div className="info">
+                <div className="name">{u.name}</div>
               </div>
-              {count > 0 && <span className="unread-badge">{count}</span>}
+              {count > 0 && <span className="badge">{count}</span>}
             </div>
           );
         })}
