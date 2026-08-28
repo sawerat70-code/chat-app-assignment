@@ -25,14 +25,9 @@ app.use(
 app.use("/api/auth", authRoutes);
 app.use("/api/chat", chatRoutes);
 
-const io = new Server(server, {
-  cors: {
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
-    credentials: true,
-  },
-});
 
-initSocket(io);
+
+initSocket(server);
 
 mongoose
   .connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/chatapp")
