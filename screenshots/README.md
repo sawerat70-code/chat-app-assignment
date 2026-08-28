@@ -4,3 +4,4 @@ Put your own screenshots here. See README.md for the file names.
 ![chat_page](image-2.png)
 ![unread_notification](image-3.png)
 ![blurTick_verification](image-4.png)
+![two_users-at-the-same-time](image-5.png)
