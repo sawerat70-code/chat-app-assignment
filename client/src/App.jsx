@@ -29,7 +29,7 @@ function App() {
     <Routes>
       <Route
         path="/login"
-        element={user ? <Navigate to="/chat" /> : <Login onLogin={setUser} />}
+        element={user ? <Navigate to="/chat" /> : <Login setUser={setUser} />}
       />
       <Route
         path="/register"
