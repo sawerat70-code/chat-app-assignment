@@ -140,6 +140,7 @@ function initSocket(server) {
           userId: fromUserId,
           count: 0,
         });
+        io.to(fromUserId).emit("chat:read",{by:userId});
       } catch (err) {
         console.error("Error marking messages read:", err);
       }
