@@ -57,6 +57,15 @@ const Chat=({ user,onLogout})=> {
         setUnread(counts);
       }
     });
+    socket.on("chat:read", ({ by }) => {
+  if (activeUser && by === activeUser._id) {
+    setMessages((prev) =>
+      prev.map((m) =>
+        (m.sender === user._id || m.sender === user.id) ? { ...m, read: true } : m
+      )
+    );
+  }
+});
 
     // TODO (student): listen for "online:count" and call setOnlineCount(count)
 
@@ -76,6 +85,7 @@ const Chat=({ user,onLogout})=> {
        socket.off("online:count");
        socket.off("chat:message");
        socket.off("chat:unread:update");
+       socket.off("chat:read");
     };
   }, [activeUser]);
 
