@@ -1,33 +1,58 @@
-import { useState } from "react";
-import React from "react";
-const userList=({users,selectedUser,onSelectUser,onlineList=[],unreadCounts={}})=>{
-  return(
-    <div className="user-list">
-      {users.map((u)=>{
-        const isOnline=onlineList.includes(u._id);
-        const unread=unreadCounts[u._id]||0;
-        const isSelected=selectedUser?._id ===u._id;
-        return(
-          <div
-          key={u._id}
-          className={`user-item${isSelected ? "active": ""}`}
-          onClick={()=>onSelectUser(u)}
-          >
-            <div className="avatar" style={{position:"relative"}}>
-              {u.name.charAt(0).toUpperCase()}
-            </div>
-            {isOnline && <div className="online-dot"/>}
-            <div className="user-item-inf0">
-              <div className="user-item-name">
-                <span>{u.name}</span>
+import React, { useState } from "react";
+
+const UserList = ({ me, users, activeUser, unread, onlineCount, onSelect, onLogout }) => {
+  const [search, setSearch] = useState("");
+
+  const filteredUsers = users.filter((u) =>
+    u.name.toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <div className="sidebar">
+      <div className="sidebar-header">
+        <div className="user-profile">
+          <div className="avatar me-avatar">
+            {me?.name ? me.name.charAt(0).toUpperCase() : "U"}
+          </div>
+          <div>
+            <div className="user-name">{me?.name}</div>
+            <div className="user-status">Online</div>
+          </div>
+        </div>
+        <button onClick={onLogout} className="logout-btn">Logout</button>
+      </div>
+
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Search users..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+
+      <div className="users-scroll">
+        {filteredUsers.map((u) => {
+          const isSelected = activeUser?._id === u._id;
+          const count = unread?.[u._id] || 0;
+
+          return (
+            <div
+              key={u._id}
+              className={`user-item ${isSelected ? "active" : ""}`}
+              onClick={() => onSelect(u)}
+            >
+              <div className="avatar">
+                {u.name.charAt(0).toUpperCase()}
               </div>
-              <div className="user-item-status">{isOnline? "Online" : "Offline"}</div>
-        
+              <div className="user-details">
+                <div className="user-item-name">{u.name}</div>
+              </div>
+              {count > 0 && <span className="unread-badge">{count}</span>}
             </div>
-            {unread >0 && <div className="unread-badge">{unread}</div>}
-</div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 };

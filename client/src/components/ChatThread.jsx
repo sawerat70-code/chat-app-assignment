@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import socket from "../socket";
 
-const ChatThread = ({ selectedUser, currentUser, messages }) => {
+const ChatThread = ({ me, other, messages, onSend }) => {
   const [text, setText] = useState("");
   const messagesEndRef = useRef(null);
 
@@ -9,56 +8,48 @@ const ChatThread = ({ selectedUser, currentUser, messages }) => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSend = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (!text.trim()) return;
-
-    socket.emit("chat:send", { to: selectedUser._id, text });
+    onSend(text);
     setText("");
   };
 
   return (
-    <div className="chat-panel">
-      <div className="chat-header">
-        <div className="avatar">
-          {selectedUser.name ? selectedUser.name.charAt(0).toUpperCase() : "U"}
-        </div>
-        <div style={{ marginLeft: "0.75rem" }}>
-          <div style={{ fontWeight: 600 }}>{selectedUser.name}</div>
+    <div className="main">
+      <div className="main-head">
+        <div className="avatar">{other.name?.charAt(0).toUpperCase()}</div>
+        <div className="chat-header-info">
+          <h3>{other.name}</h3>
         </div>
       </div>
 
-      <div className="chat-messages">
+      <div className="body">
         {messages.map((m, idx) => {
-          const isMe = m.sender === currentUser._id || m.sender === currentUser.id;
+          const isMe = m.sender === me._id || m.sender === me.id;
           const timeStr = new Date(m.createdAt).toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
           });
 
           return (
-            <div
-              key={m._id || idx}
-              className={`message-bubble ${isMe ? "sent" : "received"}`}
-            >
-              <div>{m.text}</div>
-              <div className="message-time">{timeStr}</div>
+            <div key={m._id || idx} className={`bubble ${isMe ? "out" : "in"}`}>
+              <div className=".bubble">{m.text}</div>
+              <div className="stamp">{timeStr}</div>
             </div>
           );
         })}
         <div ref={messagesEndRef} />
       </div>
 
-      <form className="chat-input" onSubmit={handleSend}>
+      <form className="foot" onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Type a message"
+          placeholder="Type a message..."
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
-        <button type="submit" className="send-btn">
-          Send
-        </button>
+        <button type="submit" className="send">Send</button>
       </form>
     </div>
   );
