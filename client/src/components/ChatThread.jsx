@@ -34,8 +34,14 @@ const ChatThread = ({ me, other, messages, onSend }) => {
 
           return (
             <div key={m._id || idx} className={`bubble ${isMe ? "out" : "in"}`}>
-              <div className=".bubble">{m.text}</div>
-              <div className="stamp">{timeStr}</div>
+              <div>{m.text}</div>
+              <div className="stamp">{timeStr}
+                {isMe && (
+                  <span className={`ticks ${m.read ? "read": ""}`}>
+                    {m.read ? "✓✓" : "✓"}
+                  </span>
+                )}
+              </div>
             </div>
           );
         })}
